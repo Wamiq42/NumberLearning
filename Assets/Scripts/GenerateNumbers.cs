@@ -5,7 +5,7 @@ using System.Linq;
 
 public class GenerateNumbers : MonoBehaviour
 {
-    [SerializeField] private int numberToLearn;
+   
     [SerializeField] private List<GameObject> numbers;
     [SerializeField] private Transform[] spawnPoints;
 
@@ -13,11 +13,16 @@ public class GenerateNumbers : MonoBehaviour
     private int indexofNumberToLearn;
     private System.Random rand = new System.Random();
     List<GameObject> tempList = new List<GameObject>();
+    private List<int> randomIntegers;
+    private int numberToLearn;
 
     private void Start()
     {
+        numberToLearn = GameManager.instance.numberToLearn;
         SettingGameObjectsInList();
         FindingIndex();
+        CreateRandomIntegerList();
+        ShuffleRandomIntegerList();
         SpawnNumbers();
         //Debug.Log(numbers[indexofNumberToLearn].GetComponent<Numbers>().GetNumber());
     }
@@ -34,9 +39,9 @@ public class GenerateNumbers : MonoBehaviour
         numbers.Add(GetNumbersGameObjects("One"));
         numbers.Add(GetNumbersGameObjects("Two"));
         numbers.Add(GetNumbersGameObjects("Three"));
-        //numbers.Add(GetNumbersGameObjects("Zero"));
+        numbers.Add(GetNumbersGameObjects("Four"));
 
-
+       
     }
     void FindingIndex()
     {
@@ -65,12 +70,39 @@ public class GenerateNumbers : MonoBehaviour
         for (int j = spawnPoints.Length - 4; j < spawnPoints.Length; j++)
         {
             int tempIndex = GetRandomIndexForNumbers();
-            Debug.Log("ForLoopStarted" + j);
+           // Debug.Log("ForLoopStarted" + j);
             GameObject temp = Instantiate(tempList[tempIndex], spawnPoints[j].transform.position, Quaternion.identity);
         }
 
     }
 
+  
+
+    void CreateRandomIntegerList()
+    {
+       
+        randomIntegers = new List<int>();
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            randomIntegers.Add(i);
+        }
+       
+    }
+
+    void ShuffleRandomIntegerList()
+    {
+        int n = randomIntegers.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rand.Next(n + 1);
+            var value = randomIntegers[k];
+            randomIntegers[k] = randomIntegers[n];
+            randomIntegers[n] = value;
+        }
+
+    }
+    
 
     int GetRandomIndexForNumbers()
     {
@@ -94,24 +126,10 @@ public class GenerateNumbers : MonoBehaviour
             randomIndex = rand.Next(tempList.Count);
         }
         
-        
+         
 
 
         return randomIndex;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    enum LearnTheNumber { one, two, three };
 
 }
