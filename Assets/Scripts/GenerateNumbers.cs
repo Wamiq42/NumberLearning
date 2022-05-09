@@ -18,20 +18,19 @@ public class GenerateNumbers : MonoBehaviour
 
     private void Start()
     {
-        numberToLearn = GameManager.instance.numberToLearn;
+        numberToLearn = GameManager.instance.GetNumber();
         SettingGameObjectsInList();
         FindingIndex();
         CreateRandomIntegerList();
         ShuffleRandomIntegerList();
+        ShuffleSpawnPoints();
         SpawnNumbers();
         //Debug.Log(numbers[indexofNumberToLearn].GetComponent<Numbers>().GetNumber());
+
+        
     }
 
-    GameObject GetNumbersGameObjects(string path)
-    {
-        var number = Resources.Load(path, (typeof(GameObject))) as GameObject;
-        return number;
-    }
+  
 
     void SettingGameObjectsInList()
     {
@@ -40,9 +39,14 @@ public class GenerateNumbers : MonoBehaviour
         numbers.Add(GetNumbersGameObjects("Two"));
         numbers.Add(GetNumbersGameObjects("Three"));
         numbers.Add(GetNumbersGameObjects("Four"));
-
-       
     }
+
+    GameObject GetNumbersGameObjects(string path)
+    {
+        var number = Resources.Load(path, (typeof(GameObject))) as GameObject;
+        return number;
+    }
+
     void FindingIndex()
     {
         foreach (var item in numbers)
@@ -52,7 +56,7 @@ public class GenerateNumbers : MonoBehaviour
                 indexofNumberToLearn = numbers.IndexOf(item);
             }
         }
-        Debug.Log(indexofNumberToLearn);
+        //Debug.Log(indexofNumberToLearn);
     }
 
     void SpawnNumbers()
@@ -67,7 +71,7 @@ public class GenerateNumbers : MonoBehaviour
             //Debug.Log(i);    
         }
 
-        for (int j = spawnPoints.Length - 4; j < spawnPoints.Length; j++)
+        for (int j = spawnPoints.Length - spawnPoints.Length / 2; j < spawnPoints.Length; j++)
         {
             int tempIndex = GetRandomIndexForNumbers();
            // Debug.Log("ForLoopStarted" + j);
@@ -87,6 +91,19 @@ public class GenerateNumbers : MonoBehaviour
             randomIntegers.Add(i);
         }
        
+    }
+
+    void ShuffleSpawnPoints()
+    {
+        int n = spawnPoints.Length;
+        while (n>1)
+        {
+            n--;
+            int k = rand.Next(n + 1);
+            var temp = spawnPoints[k];
+            spawnPoints[k] = spawnPoints[n];
+            spawnPoints[n] = temp;
+        }
     }
 
     void ShuffleRandomIntegerList()
@@ -125,10 +142,7 @@ public class GenerateNumbers : MonoBehaviour
             tempList.Add(numbers[indexofNumberToLearn + 1]);
             randomIndex = rand.Next(tempList.Count);
         }
-        
-         
-
-
+  
         return randomIndex;
     }
 
