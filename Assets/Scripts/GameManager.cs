@@ -12,12 +12,16 @@ public class GameManager : MonoBehaviour
     
 
     private int counter = 0;
+    private bool nextGame;
 
     public delegate void ClickedNumber(int number);
     public ClickedNumber clickedNumber;
 
-    [SerializeField] private int numberToLearn;
-    [SerializeField] private GameObject numberPanel;
+    public delegate void NextMiniGame(bool nextGame);
+    public NextMiniGame nextMiniGame;
+    public int numberToLearn;
+    //[SerializeField] private GameObject numberPanel;
+    //[SerializeField] private bool panelStatus = true;
 
 
 
@@ -26,15 +30,18 @@ public class GameManager : MonoBehaviour
         if(instance != null)
         {
             Destroy(gameObject);
+      
         }
         else
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+
         }
     }
     private void Update()
     {
+       
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -49,17 +56,15 @@ public class GameManager : MonoBehaviour
                 if(counter == 4)
                 {
                     counter = 0;
-                    SceneManager.LoadScene(0);
+                    nextGame = true;
+                    nextMiniGame?.Invoke(nextGame);
                 }
             }
         }
+   
     }
 
-    public void OnClickedButton(Button button)
-    {
-        numberToLearn = int.Parse(button.GetComponentInChildren<Text>().text);
-        clickedNumber?.Invoke(numberToLearn);
-    }
+    
 
 
 
@@ -67,9 +72,22 @@ public class GameManager : MonoBehaviour
 
 
     //Setter Getters
+    //public bool GetStatus()
+    //{
+    //    return panelStatus;
+    //}
+    //public void SetStatus(bool status)
+    //{
+    //    panelStatus = status;
+    //}
     public int GetNumber()
     {
         return numberToLearn;
+    }
+
+    public void SetNumber(int number)
+    {
+        numberToLearn = number;
     }
 
 }

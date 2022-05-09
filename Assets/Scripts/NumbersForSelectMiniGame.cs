@@ -3,28 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class GenerateNumbers : MonoBehaviour
+public class NumbersForSelectMiniGame : MonoBehaviour
 {
    
     [SerializeField] private List<GameObject> numbers;
     [SerializeField] private Transform[] spawnPoints;
 
+    [SerializeField] private List<GameObject> generatedPrefabs = new List<GameObject>();
+    
+    
     // private int counter = 0;
     private int indexofNumberToLearn;
     private System.Random rand = new System.Random();
     List<GameObject> tempList = new List<GameObject>();
     private List<int> randomIntegers;
     private int numberToLearn;
+    
+
+    private void OnEnable()
+    {
+        
+        GameManager.instance.clickedNumber += SpawnNumbers;
+        GameManager.instance.nextMiniGame += DestroyNumber;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.instance.clickedNumber -= SpawnNumbers;
+        GameManager.instance.nextMiniGame += DestroyNumber;
+    }
 
     private void Start()
     {
-        numberToLearn = GameManager.instance.GetNumber();
-        SettingGameObjectsInList();
-        FindingIndex();
+        //numberToLearn = GameManager.instance.GetNumber();
+        SettingGameObjectsInList();       
         CreateRandomIntegerList();
         ShuffleRandomIntegerList();
         ShuffleSpawnPoints();
-        SpawnNumbers();
+        
         //Debug.Log(numbers[indexofNumberToLearn].GetComponent<Numbers>().GetNumber());
 
         
@@ -35,23 +51,29 @@ public class GenerateNumbers : MonoBehaviour
     void SettingGameObjectsInList()
     {
         numbers = new List<GameObject>();
-        numbers.Add(GetNumbersGameObjects("One"));
-        numbers.Add(GetNumbersGameObjects("Two"));
-        numbers.Add(GetNumbersGameObjects("Three"));
-        numbers.Add(GetNumbersGameObjects("Four"));
+
+        foreach (var item in Resources.LoadAll<GameObject>("Prefabs"))
+        {
+            numbers.Add(item);
+        }
+
+        //numbers.Add(GetNumbersGameObjects("One"));
+        //numbers.Add(GetNumbersGameObjects("Two"));
+        //numbers.Add(GetNumbersGameObjects("Three"));
+        //numbers.Add(GetNumbersGameObjects("Four"));
     }
 
-    GameObject GetNumbersGameObjects(string path)
-    {
-        var number = Resources.Load(path, (typeof(GameObject))) as GameObject;
-        return number;
-    }
+    //GameObject GetNumbersGameObjects(string path)
+    //{
+    //    var number = Resources.Load(path, (typeof(GameObject))) as GameObject;
+    //    return number;
+    //}
 
-    void FindingIndex()
+    void FindingIndex(int number)
     {
         foreach (var item in numbers)
         {
-            if (item.GetComponent<Numbers>().GetNumber() == numberToLearn)
+            if (item.GetComponent<Numbers>().GetNumber() == number)
             {
                 indexofNumberToLearn = numbers.IndexOf(item);
             }
@@ -59,14 +81,18 @@ public class GenerateNumbers : MonoBehaviour
         //Debug.Log(indexofNumberToLearn);
     }
 
-    void SpawnNumbers()
+    void SpawnNumbers(int number)
     {
+        Debug.Log("EnteredSpawnning-Method");
+        FindingIndex(number);
         for (int i = 0; i < spawnPoints.Length / 2; i++)
         {
 
             //counter++;
+            Debug.Log("Entered First loop to spawn " + number);
+            Debug.Log("number to learn" + indexofNumberToLearn);
             GameObject temp = Instantiate(numbers[indexofNumberToLearn], spawnPoints[i].transform.position, Quaternion.identity);
-
+            generatedPrefabs.Add(temp);
             //Debug.Log(tempIndexNumber);
             //Debug.Log(i);    
         }
@@ -74,10 +100,21 @@ public class GenerateNumbers : MonoBehaviour
         for (int j = spawnPoints.Length - spawnPoints.Length / 2; j < spawnPoints.Length; j++)
         {
             int tempIndex = GetRandomIndexForNumbers();
-           // Debug.Log("ForLoopStarted" + j);
+            // Debug.Log("ForLoopStarted" + j);
             GameObject temp = Instantiate(tempList[tempIndex], spawnPoints[j].transform.position, Quaternion.identity);
+            generatedPrefabs.Add(temp);
         }
 
+    }
+    void DestroyNumber(bool nextGame)
+    {
+        foreach (var item in generatedPrefabs)
+        {
+            if(item != null)
+            {
+                Destroy(item);
+            }
+        }
     }
 
   
