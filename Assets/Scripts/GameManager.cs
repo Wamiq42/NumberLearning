@@ -21,7 +21,9 @@ public class GameManager : MonoBehaviour
     public NextMiniGame nextMiniGame;
     public int numberToLearn;
     //[SerializeField] private GameObject numberPanel;
-    //[SerializeField] private bool panelStatus = true;
+    [SerializeField] private bool panelStatus = true;
+    [SerializeField] private GameObject firstMiniGame;
+    [SerializeField] private GameObject secondMiniGame;
 
 
 
@@ -41,9 +43,7 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
-       
-
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && firstMiniGame.active == true)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
@@ -55,9 +55,9 @@ public class GameManager : MonoBehaviour
                 counter++;
                 if(counter == 4)
                 {
-                    counter = 0;
-                    nextGame = true;
-                    nextMiniGame?.Invoke(nextGame);
+                   counter = 0;
+                   nextGame = true;
+                   nextMiniGame?.Invoke(nextGame);
                 }
             }
         }
@@ -80,6 +80,24 @@ public class GameManager : MonoBehaviour
     //{
     //    panelStatus = status;
     //}
+
+    public GameObject GetFirstGame()
+    {
+        return firstMiniGame;
+    }
+    public void SetGameObjectFirstActive(bool active)
+    {
+        firstMiniGame.SetActive(active);
+    }
+    public GameObject GetSecondMiniGame()
+    {
+        return secondMiniGame;
+    }
+    public void SetGameObjectSecondActive(bool active)
+    {
+        secondMiniGame.SetActive(active);
+    }
+
     public int GetNumber()
     {
         return numberToLearn;

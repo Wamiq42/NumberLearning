@@ -16,7 +16,7 @@ public class NumbersForSelectMiniGame : MonoBehaviour
     private int indexofNumberToLearn;
     private System.Random rand = new System.Random();
     List<GameObject> tempList = new List<GameObject>();
-    private List<int> randomIntegers;
+   // private List<int> randomIntegers;
     private int numberToLearn;
     
 
@@ -37,8 +37,6 @@ public class NumbersForSelectMiniGame : MonoBehaviour
     {
         //numberToLearn = GameManager.instance.GetNumber();
         SettingGameObjectsInList();       
-        CreateRandomIntegerList();
-        ShuffleRandomIntegerList();
         ShuffleSpawnPoints();
         
         //Debug.Log(numbers[indexofNumberToLearn].GetComponent<Numbers>().GetNumber());
@@ -89,8 +87,8 @@ public class NumbersForSelectMiniGame : MonoBehaviour
         {
 
             //counter++;
-            Debug.Log("Entered First loop to spawn " + number);
-            Debug.Log("number to learn" + indexofNumberToLearn);
+            //Debug.Log("Entered First loop to spawn " + number);
+            //Debug.Log("number to learn" + indexofNumberToLearn);
             GameObject temp = Instantiate(numbers[indexofNumberToLearn], spawnPoints[i].transform.position, Quaternion.identity);
             generatedPrefabs.Add(temp);
             //Debug.Log(tempIndexNumber);
@@ -115,20 +113,16 @@ public class NumbersForSelectMiniGame : MonoBehaviour
                 Destroy(item);
             }
         }
+        GameManager.instance.SetGameObjectSecondActive(true);
+        GameManager.instance.SetGameObjectFirstActive(false);
+        
+        
     }
 
+   
   
 
-    void CreateRandomIntegerList()
-    {
-       
-        randomIntegers = new List<int>();
-        for (int i = 0; i < spawnPoints.Length; i++)
-        {
-            randomIntegers.Add(i);
-        }
-       
-    }
+   
 
     void ShuffleSpawnPoints()
     {
@@ -143,19 +137,7 @@ public class NumbersForSelectMiniGame : MonoBehaviour
         }
     }
 
-    void ShuffleRandomIntegerList()
-    {
-        int n = randomIntegers.Count;
-        while (n > 1)
-        {
-            n--;
-            int k = rand.Next(n + 1);
-            var value = randomIntegers[k];
-            randomIntegers[k] = randomIntegers[n];
-            randomIntegers[n] = value;
-        }
-
-    }
+    
     
 
     int GetRandomIndexForNumbers()
