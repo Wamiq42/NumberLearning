@@ -81,7 +81,7 @@ public class NumbersForSelectMiniGame : MonoBehaviour
 
     void SpawnNumbers(int number)
     {
-        Debug.Log("EnteredSpawnning-Method");
+        //Debug.Log("EnteredSpawnning-Method");
         FindingIndex(number);
         for (int i = 0; i < spawnPoints.Length / 2; i++)
         {

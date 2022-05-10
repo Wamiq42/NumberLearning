@@ -7,11 +7,13 @@ public class Button : MonoBehaviour
 {
 
     [SerializeField] private GameObject panelObject;
+    [SerializeField] private List<GameObject> Levels;
     public void OnButtonClick(Button button)
     {
-        
-        GameManager.instance.SetNumber(int.Parse(button.GetComponentInChildren<Text>().text));
+        GameManager.instance.SetNumberToLearn(int.Parse(button.GetComponentInChildren<Text>().text));
         GameManager.instance.clickedNumber?.Invoke(GameManager.instance.numberToLearn);
         panelObject.SetActive(false);
     }
+
+   
 }

@@ -1,31 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class NumbersForDragDrop : MonoBehaviour
 {
     [SerializeField] private List<GameObject> numbers;
     [SerializeField] private List<Transform> spawnTransforms;
+    [SerializeField] private List<GameObject> spawnedPrefabs = new List<GameObject>();
+
 
     private System.Random rand = new System.Random();
     private int indexofNumberToLearn;
     private List<GameObject> tempList = new List<GameObject>();
 
-   
+
+    private void OnEnable()
+    {
+        
+        GameManager.instance.counterAdded += DeleteSpawnedPrefabs;
+    }
 
     private void OnDisable()
     {
-        GameManager.instance.clickedNumber -= SpawnNumbers;
-       
+        //GameManager.instance.clickedNumber -= SpawnNumbers;
+        GameManager.instance.counterAdded -= DeleteSpawnedPrefabs;
+
     }
     // Start is called before the first frame update
     void Start()
     {
-        GameManager.instance.clickedNumber += SpawnNumbers;
+       
         SettingGameObjectsInList();
         ShuffleSpawnPoints();
-        SpawnNumbers(GameManager.instance.GetNumber());
+        SpawnNumbers(GameManager.instance.GetNumberToLearn());
     }
 
 
@@ -37,19 +46,60 @@ public class NumbersForDragDrop : MonoBehaviour
             if (i == 0)
             {
                 
-                Instantiate(numbers[indexofNumberToLearn], spawnTransforms[i].position, Quaternion.identity);
-                Debug.Log("Spawned number to learn" + number);
+               GameObject temp = Instantiate(numbers[indexofNumberToLearn], spawnTransforms[i].position, Quaternion.identity);
+                spawnedPrefabs.Add(temp);
+                //Debug.Log("Spawned number to learn" + number);
             }
             else
             {
                 int tempIndex = GetRandomIndexForNumbers();
                 
-                Instantiate(tempList[tempIndex], spawnTransforms[i].transform.position, Quaternion.identity);
-                Debug.Log("Spawned number to learn" + tempList[tempIndex].name);
+                GameObject temp =Instantiate(tempList[tempIndex], spawnTransforms[i].transform.position, Quaternion.identity);
+                spawnedPrefabs.Add(temp);
+                //Debug.Log("Spawned number to learn" + tempList[tempIndex].name);
 
             }
         }
        
+    }
+    void SpawnNumbers()
+    {
+        FindingIndex(GameManager.instance.numberToLearn);
+        for (int i = 0; i < spawnTransforms.Count; i++)
+        {
+            if (i == 0)
+            {
+
+                GameObject temp = Instantiate(numbers[indexofNumberToLearn], spawnTransforms[i].position, Quaternion.identity);
+                temp.transform.SetParent(spawnTransforms[0]);
+                spawnedPrefabs.Add(temp);
+                //Debug.Log("Spawned number to learn" + number);
+            }
+            else
+            {
+                int tempIndex = GetRandomIndexForNumbers();
+
+                GameObject temp = Instantiate(tempList[tempIndex], spawnTransforms[i].transform.position, Quaternion.identity);
+                temp.transform.SetParent(spawnTransforms[0]);
+                spawnedPrefabs.Add(temp);
+                //Debug.Log("Spawned number to learn" + tempList[tempIndex].name);
+
+            }
+        }
+
+    }
+
+    void DeleteSpawnedPrefabs(int counter)
+    {
+        if (counter <3)
+        {
+            Debug.Log(counter);
+            foreach (var item in spawnedPrefabs)
+            {
+                Destroy(item);
+            }
+            SpawnNumbers();
+        }
     }
 
     void SettingGameObjectsInList()

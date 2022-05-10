@@ -11,19 +11,42 @@ public class GameManager : MonoBehaviour
 
     
 
-    private int counter = 0;
+    private static int counter = 0;
+    public int Counter
+    {
+        get => counter;
+
+        set
+        {
+            counter = value;
+        }
+    }
+
     private bool nextGame;
+    public bool NextGame
+    {
+        get => nextGame;
+        set
+        {
+            nextGame = value;
+        }
+    }
 
     public delegate void ClickedNumber(int number);
     public ClickedNumber clickedNumber;
 
+    public delegate void CounterAdded(int counter);
+    public CounterAdded counterAdded;
+
     public delegate void NextMiniGame(bool nextGame);
     public NextMiniGame nextMiniGame;
+
     public int numberToLearn;
     //[SerializeField] private GameObject numberPanel;
-    [SerializeField] private bool panelStatus = true;
+   //[SerializeField] private bool panelStatus = true;
     [SerializeField] private GameObject firstMiniGame;
     [SerializeField] private GameObject secondMiniGame;
+    [SerializeField] private GameObject thirdMiniGame;
 
 
 
@@ -43,24 +66,24 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && firstMiniGame.active == true)
-        {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //    Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
 
-            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
-            if (hit.collider != null && hit.collider.gameObject.GetComponent<Numbers>().GetNumber() == numberToLearn)
-            {
-                Destroy(hit.collider.gameObject);
-                counter++;
-                if(counter == 4)
-                {
-                   counter = 0;
-                   nextGame = true;
-                   nextMiniGame?.Invoke(nextGame);
-                }
-            }
-        }
+        //    RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+        //    if (hit.collider != null && hit.collider.gameObject.GetComponent<Numbers>().GetNumber() == numberToLearn)
+        //    {
+        //        Destroy(hit.collider.gameObject);
+        //        counter++;
+        //        if(counter == 4)
+        //        {
+        //           counter = 0;
+        //           nextGame = true;
+        //           nextMiniGame?.Invoke(nextGame);
+        //        }
+        //    }
+        //}
    
     }
 
@@ -80,8 +103,11 @@ public class GameManager : MonoBehaviour
     //{
     //    panelStatus = status;
     //}
-
-    public GameObject GetFirstGame()
+    public GameObject GetThirdMiniGame()
+    {
+        return thirdMiniGame;
+    }
+    public GameObject GetFirstMiniGame()
     {
         return firstMiniGame;
     }
@@ -92,18 +118,19 @@ public class GameManager : MonoBehaviour
     public GameObject GetSecondMiniGame()
     {
         return secondMiniGame;
+        
     }
     public void SetGameObjectSecondActive(bool active)
     {
         secondMiniGame.SetActive(active);
     }
 
-    public int GetNumber()
+    public int GetNumberToLearn()
     {
         return numberToLearn;
     }
 
-    public void SetNumber(int number)
+    public void SetNumberToLearn(int number)
     {
         numberToLearn = number;
     }
