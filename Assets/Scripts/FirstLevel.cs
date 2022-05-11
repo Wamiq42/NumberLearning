@@ -33,13 +33,19 @@ public class FirstLevel : MonoBehaviour
                 GameManager.instance.Counter += 1;
                 if (GameManager.instance.Counter == 4)
                 {
+                    GameManager.instance.SetGameObjectSecondActive(true);
                     GameManager.instance.NextGame = true;
                     GameManager.instance.nextMiniGame?.Invoke(GameManager.instance.NextGame);
                     GameManager.instance.Counter = 0;
+                    GameManager.instance.clickedNumber?.Invoke(GameManager.instance.numberToLearn);
                     Debug.Log(GameManager.instance.Counter);
+                    GameManager.instance.SetGameObjectFirstActive(false);
+
                 }
             }
         }
 
     }
+
+    
 }

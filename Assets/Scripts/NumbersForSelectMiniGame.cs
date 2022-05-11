@@ -90,6 +90,7 @@ public class NumbersForSelectMiniGame : MonoBehaviour
             //Debug.Log("Entered First loop to spawn " + number);
             //Debug.Log("number to learn" + indexofNumberToLearn);
             GameObject temp = Instantiate(numbers[indexofNumberToLearn], spawnPoints[i].transform.position, Quaternion.identity);
+            temp.transform.SetParent(spawnPoints[i]);
             generatedPrefabs.Add(temp);
             //Debug.Log(tempIndexNumber);
             //Debug.Log(i);    
@@ -100,6 +101,7 @@ public class NumbersForSelectMiniGame : MonoBehaviour
             int tempIndex = GetRandomIndexForNumbers();
             // Debug.Log("ForLoopStarted" + j);
             GameObject temp = Instantiate(tempList[tempIndex], spawnPoints[j].transform.position, Quaternion.identity);
+            temp.transform.SetParent(spawnPoints[j]);
             generatedPrefabs.Add(temp);
         }
 
@@ -113,10 +115,6 @@ public class NumbersForSelectMiniGame : MonoBehaviour
                 Destroy(item);
             }
         }
-        GameManager.instance.SetGameObjectSecondActive(true);
-        GameManager.instance.SetGameObjectFirstActive(false);
-        
-        
     }
 
    

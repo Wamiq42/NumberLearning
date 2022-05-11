@@ -33,7 +33,8 @@ public class SecondLevel : MonoBehaviour
     {
         if(counter == 3)
         {
-
+            GameManager.instance.NextGame = true;
+            GameManager.instance.nextMiniGame?.Invoke(GameManager.instance.NextGame);
             GameManager.instance.GetFirstMiniGame().SetActive(false); 
             GameManager.instance.GetSecondMiniGame().SetActive(false);
             GameManager.instance.GetThirdMiniGame().SetActive(true);

@@ -35,22 +35,18 @@ public class ThirdLevel : MonoBehaviour
                 GameManager.instance.Counter += 1;
                 if (GameManager.instance.Counter == 4)
                 {
+                    GameManager.instance.NextGame = true;
+                    GameManager.instance.nextMiniGame?.Invoke(GameManager.instance.NextGame);
                     GameManager.instance.GetFirstMiniGame().SetActive(true);
                     GameManager.instance.GetSecondMiniGame().SetActive(false);
                     GameManager.instance.GetThirdMiniGame().SetActive(false);
-                   // GameManager.instance.Counter = 0;
+                    GameManager.instance.Counter = 0;
                    //Application.Quit();
                     Debug.Log(GameManager.instance.Counter);
-                    //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 }
             }
         }
-
-        if(GameManager.instance.Counter == 4)
-        {
-            Application.Quit();
-        }
-
     }
 
 
