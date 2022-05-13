@@ -23,7 +23,7 @@ public class ThirdLevel : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && GameManager.instance.IsGameStarted)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
@@ -35,13 +35,10 @@ public class ThirdLevel : MonoBehaviour
                 GameManager.instance.Counter += 1;
                 if (GameManager.instance.Counter == 4)
                 {
-                    GameManager.instance.NextGame = true;
-                    GameManager.instance.nextMiniGame?.Invoke(GameManager.instance.NextGame);
-                    GameManager.instance.GetFirstMiniGame().SetActive(true);
-                    GameManager.instance.GetSecondMiniGame().SetActive(false);
-                    GameManager.instance.GetThirdMiniGame().SetActive(false);
+                   
+                    GameManager.instance.IsGameStarted = false;
                     GameManager.instance.Counter = 0;
-                   //Application.Quit();
+                 
                     Debug.Log(GameManager.instance.Counter);
                     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 }

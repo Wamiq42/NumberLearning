@@ -7,20 +7,22 @@ public class FindTheNumber : MonoBehaviour
 {
     [SerializeField] private List<GameObject> numbers;
     [SerializeField] private List<Transform> spawnPoints;
+    [SerializeField] private List<Transform> positions;
 
     [SerializeField] private List<GameObject> generatedPrefabs = new List<GameObject>();
     private int indexofNumberToLearn;
     private List<GameObject> tempList = new List<GameObject>();
 
 
-    
-
-    private void Start()
+    void OnEnable()
     {
         SettingGameObjectsInList();
         SpawnNumbers(GameManager.instance.numberToLearn);
 
+
     }
+
+   
 
     void SettingGameObjectsInList()
     {
@@ -49,9 +51,9 @@ public class FindTheNumber : MonoBehaviour
         for (int i = 0; i < spawnPoints.Count; i++)
         {
             GameObject temp = Instantiate(numbers[indexofNumberToLearn], spawnPoints[i].position, Quaternion.identity);
+            temp.GetComponent<Numbers>().MoveToPosition(spawnPoints[i].position, positions[i].position);
             tempList.Add(temp);
         }
-        
        
     }
 }

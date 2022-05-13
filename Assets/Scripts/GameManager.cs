@@ -7,11 +7,23 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    
 
-    
 
+    public delegate void ToNextLevel(int number);
+    public ToNextLevel toNextLevel;
+
+   
+    private int currentLevel;
     private static int counter = 0;
+    private bool isGameStarted = false;
+    public bool IsGameStarted
+    {
+        get => isGameStarted;
+        set
+        {
+            isGameStarted = value;
+        }
+    }
     public int Counter
     {
         get => counter;
@@ -42,11 +54,9 @@ public class GameManager : MonoBehaviour
     public NextMiniGame nextMiniGame;
 
     public int numberToLearn;
-    //[SerializeField] private GameObject numberPanel;
-   //[SerializeField] private bool panelStatus = true;
-    [SerializeField] private GameObject firstMiniGame;
-    [SerializeField] private GameObject secondMiniGame;
-    [SerializeField] private GameObject thirdMiniGame;
+    
+    [SerializeField] private List<GameObject> Levels;
+   
 
 
 
@@ -55,48 +65,51 @@ public class GameManager : MonoBehaviour
         if(instance != null)
         {
             Destroy(gameObject);
-      
+        
         }
         else
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-
         }
+       
     }
-
-
-    //Setter Getters
-    //public bool GetStatus()
-    //{
-    //    return panelStatus;
-    //}
-    //public void SetStatus(bool status)
-    //{
-    //    panelStatus = status;
-    //}
-    public GameObject GetThirdMiniGame()
+    private void OnEnable()
     {
-        return thirdMiniGame;
+        toNextLevel += ChangeLevel;   
     }
-    public GameObject GetFirstMiniGame()
+    private void OnDisable()
     {
-        return firstMiniGame;
+        toNextLevel -= ChangeLevel;
     }
-    public void SetGameObjectFirstActive(bool active)
+    void ChangeLevel(int levelNumber)
     {
-        firstMiniGame.SetActive(active);
-    }
-    public GameObject GetSecondMiniGame()
-    {
-        return secondMiniGame;
+        for (int i = 0; i < Levels.Count; i++)
+        {
+            if (levelNumber == i)
+            {
+                Levels[i].SetActive(true);
+                currentLevel = i;
+                //clickedNumber?.Invoke(numberToLearn);
+            }
+            else
+            {
+                Levels[i].SetActive(false);
+            }
+        }
         
     }
-    public void SetGameObjectSecondActive(bool active)
-    {
-        secondMiniGame.SetActive(active);
-    }
 
+   
+
+
+
+    //Setter Getters'
+   
+    public int GetCurrentLevel()
+    {
+        return currentLevel;
+    }
     public int GetNumberToLearn()
     {
         return numberToLearn;

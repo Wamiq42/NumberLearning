@@ -5,6 +5,8 @@ using UnityEngine;
 public class FirstLevel : MonoBehaviour
 {
     public static FirstLevel instance;
+
+    
     
     private void Awake()
     {
@@ -21,7 +23,8 @@ public class FirstLevel : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+
+        if (Input.GetMouseButtonDown(0) && GameManager.instance.IsGameStarted)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
@@ -33,13 +36,15 @@ public class FirstLevel : MonoBehaviour
                 GameManager.instance.Counter += 1;
                 if (GameManager.instance.Counter == 4)
                 {
-                    GameManager.instance.SetGameObjectSecondActive(true);
+                    GameManager.instance.IsGameStarted = false;
                     GameManager.instance.NextGame = true;
                     GameManager.instance.nextMiniGame?.Invoke(GameManager.instance.NextGame);
+
                     GameManager.instance.Counter = 0;
-                    GameManager.instance.clickedNumber?.Invoke(GameManager.instance.numberToLearn);
+                    
+                    GameManager.instance.toNextLevel?.Invoke(1);
                     Debug.Log(GameManager.instance.Counter);
-                    GameManager.instance.SetGameObjectFirstActive(false);
+
 
                 }
             }
